@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crime Detection Expert System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+</head>
+<body>
+    <div id="content">
+        <h1> CrimeNet</h1>
+
+        <form id="crimeForm">
+            <label>Crime Type:</label>
+            <select name="crime_type" required>
+                {% for c in crime_types %}
+                    <option value="{{ c }}">{{ c.title() }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Location:</label>
+            <select name="location" required>
+                {% for l in locations %}
+                    <option value="{{ l }}">{{ l.title() }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Time:</label>
+            <select name="time" required>
+                {% for t in times %}
+                    <option value="{{ t }}">{{ t.title() }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Evaluate</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+    document.getElementById("crimeForm").onsubmit = async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const data = {
+            crime_type: form.crime_type.value,
+            location: form.location.value,
+            time: form.time.value
+        };
+
+        try {
+            const response = await fetch('/evaluate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) throw new Error('Server error');
+
+            const result = await response.json();
+
+            if (!result || result.length === 0) {
+                document.getElementById("result").innerHTML = "<p>No suspect found.</p>";
+                return;
+            }
+
+            const suspect = result[0]; 
+
+            document.getElementById("result").innerHTML = `
+                <h2>--- Evaluation Report ---</h2>
+                <p><strong>Person:</strong> ${suspect.person}</p>
+                <p><strong>Score:</strong> ${suspect.score}/100</p>
+                <p><strong>Verdict:</strong> ${suspect.verdict}</p>
+                <p><strong>Factors:</strong></p>
+                <ul style="list-style-type:none; padding-left:0;">${suspect.factors.map(f => `<li>${f}</li>`).join('')}</ul>
+            `;
+        } catch (err) {
+            document.getElementById("result").innerHTML = `<p style="color: red;">Error: ${err.message}</p>`;
+        }
+    };
+    </script>
+</body>
+</html>
