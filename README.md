@@ -88,8 +88,8 @@ http://127.0.0.1:5000
 
 ## 📸 Screenshots
 
-https://ik.imagekit.io/x7u7hyl86/Screenshot%202025-05-15%20203816.png
-https://ik.imagekit.io/x7u7hyl86/Screenshot%202025-05-15%20203833.png
+![Alt text](https://ik.imagekit.io/x7u7hyl86/Screenshot%202025-05-15%20203816.png)
+![Alt text](https://ik.imagekit.io/x7u7hyl86/Screenshot%202025-05-15%20203833.png)
 ---
 
 ## 📌 Future Improvements
